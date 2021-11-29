@@ -1,9 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TodoForm from "./TodoForm";
 import Todo from "./Todo";
 
+// get the local storage data back
+
+const getLocalData = () => {
+  const lists = localStorage.getItem("lists");
+
+  if (lists){
+    return JSON.parse(lists);
+  }else{ 
+    return [];
+  }
+};
+
 function TodoList(props) {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(getLocalData());
 
   const addTodo = (todo) => {
     if (!todo.text || /^\s*$/.test(todo.text)) {
@@ -43,6 +55,12 @@ function TodoList(props) {
 
     setTodos(updatedTodos);
   };
+
+  // adding localstorage
+
+  useEffect(() => {
+    localStorage.setItem("lists", JSON.stringify(todos));
+  }, [todos]);
 
   return (
     <div>
